@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../home/presentation/screens/home_screen.dart';
@@ -9,22 +10,10 @@ import '../../cubit/auth_cubit.dart';
 import '../../cubit/auth_state.dart';
 
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
-  @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
-}
 
-class _RegisterScreenState extends State<RegisterScreen> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-  final formKey = GlobalKey<FormState>();
-
-  bool isVisible = true;
-  bool isClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         title: Center(
           child:  Padding(
-            padding: const EdgeInsets.only(right: 30),
+            padding:  EdgeInsets.only(right: 30.w),
             child: Text(
               'Register',
             ),
@@ -53,9 +42,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding:  EdgeInsets.all(20.0).r,
             child: Form(
-              key: formKey,
+              key: AuthCubit.get(context).formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -68,8 +57,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontWeight: FontWeight.w900,
                     ),
                   ),
-                  const SizedBox(
-                    height: 40.0,
+                  SizedBox(
+                    height: 40.0.h,
                   ),
                   TextFormField(
                     validator: (value) {
@@ -79,12 +68,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       return null;
                     },
-                    controller: usernameController,
+                    controller: AuthCubit.get(context).usernameController,
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                       isDense: false,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
+                      contentPadding:  EdgeInsets.symmetric(
+                        horizontal: 20.0.w,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(
@@ -96,8 +85,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20.0,
+                   SizedBox(
+                    height: 20.0.h,
                   ),
                   TextFormField(
                     validator: (value) {
@@ -107,12 +96,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       return null;
                     },
-                    controller: emailController,
+                    controller: AuthCubit.get(context).emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       isDense: false,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
+                      contentPadding:  EdgeInsets.symmetric(
+                        horizontal: 20.0.w,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(
@@ -124,8 +113,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20.0,
+                   SizedBox(
+                    height: 20.0.h,
                   ),
                   TextFormField(
                     validator: (value) {
@@ -135,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       return null;
                     },
-                    controller: passwordController,
+                    controller: AuthCubit.get(context).passwordController,
                     decoration: InputDecoration(
                       isDense: false,
                       contentPadding: const EdgeInsets.symmetric(
@@ -151,23 +140,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       suffixIcon: IconButton(
                         onPressed: () {
-                          setState(() {
-                            isVisible = !isVisible;
-                          });
+                          AuthCubit.get(context).changePasswordVisibility();
                         },
                         icon: Icon(
-                          isVisible ? Icons.visibility : Icons.visibility_off,
+                          AuthCubit.get(context).isVisible ? Icons.visibility : Icons.visibility_off,
                         ),
                       ),
                     ),
-                    obscureText: isVisible,
+                    obscureText: AuthCubit.get(context).isVisible,
                     keyboardType: TextInputType.visiblePassword,
                   ),
-                  const SizedBox(
-                    height: 40.0,
+                   SizedBox(
+                    height: 40.0.h,
                   ),
                   Container(
-                    height: 42.0,
+                    height: 42.0.h,
                     width: double.infinity,
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     decoration: BoxDecoration(
@@ -177,72 +164,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     child: MaterialButton(
-                      height: 42.0,
+                      height: 42.0.h,
                       onPressed: () {
-                        if (formKey.currentState!.validate()) {
+                        if (AuthCubit.get(context).formKey.currentState!.validate()) {
 
 
                           AuthCubit.get(context).signup(
-                             emailController.text,
-                           passwordController.text,
-                          usernameController.text,
+
                           );
-                          // setState(() {
-                          //   isClicked = true;
-                          // });
-                          //
-                          // FirebaseAuth.instance
-                          //     .createUserWithEmailAndPassword(
-                          //     email: emailController.text,
-                          //     password: passwordController.text)
-                          //     .then((userData) {
-                          //
-                          //   // Fluttertoast.showToast(
-                          //   //   msg: userData.user!.uid,
-                          //   // );
-                          //
-                          //   // FirebaseMessaging.instance.getToken().then((value) {
-                          //   //   UserDataModel model = UserDataModel(
-                          //   //     uId: userData.user!.uid,
-                          //   //     image: '',
-                          //   //     email: emailController.text,
-                          //   //     username: usernameController.text,
-                          //   //     token: value!,
-                          //   //   );
-                          //   //
-                          //   //   FirebaseFirestore.instance
-                          //   //       .collection('users')
-                          //   //       .doc(userData.user!.uid)
-                          //   //       .set(model.toJson())
-                          //   //       .then((value) {
-                          //   //     setState(() {
-                          //   //       isClicked = false;
-                          //   //     });
-                          //   //
-                          //   //     userConst = userData.user;
-                          //   //
-                          //   //     navigateAndFinish(
-                          //   //       context,
-                          //   //       const HomeScreen(),
-                          //   //     );
-                          //   //   }).catchError((error) {
-                          //   //     Fluttertoast.showToast(
-                          //   //       msg: error.toString(),
-                          //   //     );
-                          //   //   });
-                          //   // });
-                          // }).catchError((error) {
-                          //   setState(() {
-                          //     isClicked = false;
-                          //   });
-                          //
-                          //   Fluttertoast.showToast(
-                          //     msg: error.toString().split(']').last,
-                          //   );
-                          // });
+
                         }
                       },
-                      child: isClicked
+                      child: AuthCubit.get(context).isClicked
                           ? const CupertinoActivityIndicator(
                         color: Colors.white,
                       )
@@ -265,5 +198,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
 ),
 );
   }
-
 }

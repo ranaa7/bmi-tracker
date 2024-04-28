@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../home/presentation/screens/home_screen.dart';
@@ -11,22 +12,10 @@ import '../../cubit/auth_cubit.dart';
 import '../../cubit/auth_state.dart';
 
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
 
-class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-  final formKey = GlobalKey<FormState>();
-
-  bool isVisible = true;
-  bool isClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
             body: Center(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20.0).r,
                   child: Form(
-                    key: formKey,
+                    key: AuthCubit.get(context).formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -78,8 +67,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        const SizedBox(
-                          height: 40.0,
+                         SizedBox(
+                          height: 40.0.h,
                         ),
 
                         TextFormField(
@@ -90,12 +79,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             return null;
                           },
-                          controller: emailController,
+                          controller: AuthCubit.get(context).emailController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             isDense: false,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
+                            contentPadding:  EdgeInsets.symmetric(
+                              horizontal: 20.0.w,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
@@ -107,8 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 20.0,
+                       SizedBox(
+                          height: 20.0.h,
                         ),
                         TextFormField(
                           validator: (value) {
@@ -118,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             return null;
                           },
-                          controller: passwordController,
+                          controller: AuthCubit.get(context).passwordController,
                           decoration: InputDecoration(
                             isDense: false,
                             contentPadding: const EdgeInsets.symmetric(
@@ -134,23 +123,21 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             suffixIcon: IconButton(
                               onPressed: () {
-                                setState(() {
-                                  isVisible = !isVisible;
-                                });
+                               AuthCubit.get(context).changePasswordVisibility();
                               },
                               icon: Icon(
-                                isVisible ? Icons.visibility : Icons.visibility_off,
+                                AuthCubit.get(context).isVisible ? Icons.visibility : Icons.visibility_off,
                               ),
                             ),
                           ),
-                          obscureText: isVisible,
+                          obscureText: AuthCubit.get(context).isVisible,
                           keyboardType: TextInputType.visiblePassword,
                         ),
-                        const SizedBox(
-                          height: 40.0,
+                         SizedBox(
+                          height: 40.0.h,
                         ),
                         Container(
-                          height: 42.0,
+                          height: 42.0.h,
                           width: double.infinity,
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(
@@ -160,15 +147,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           child: MaterialButton(
-                            height: 42.0,
+                            height: 42.0.h,
                             onPressed: () {
-                              if (formKey.currentState!.validate()) {
+                              if (AuthCubit.get(context).formKey.currentState!.validate()) {
 
 
-                                AuthCubit.get(context).login(emailController.text, passwordController.text);
+                                AuthCubit.get(context).login();
                               }
                             },
-                            child: isClicked
+                            child: AuthCubit.get(context).isClicked
                                 ? const CupertinoActivityIndicator(
                               color: Colors.white,
                             )
@@ -198,5 +185,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
 }

@@ -44,3 +44,6 @@ class UserCreateError extends AuthState {
     required this.message,
   });
 }
+
+
+class ChangePasswordVisibilityState extends AuthState {}

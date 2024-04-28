@@ -4,7 +4,7 @@ import 'package:bmi_tracker/features/auth/presentation/screens/login_screen.dart
 import 'package:bmi_tracker/features/home/presentation/screens/bmi_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../cubit/bmi_calc_cubit.dart';
 
@@ -46,7 +46,7 @@ BlocProvider(create: (context) => AuthCubit(),),
             ),
             body: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0).r,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -71,7 +71,7 @@ BlocProvider(create: (context) => AuthCubit(),),
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(labelText: 'Age'),
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: 16.0.h),
                     ElevatedButton(
                       onPressed: () {
                         BmiCalcCubit.get(context).calculateBMI();
@@ -82,7 +82,7 @@ BlocProvider(create: (context) => AuthCubit(),),
                       },
                       child: Text('calculate BMi'),
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: 16.0.h),
 
                     if (state is BmiCalcLoaded)
                       Column(
@@ -91,7 +91,7 @@ BlocProvider(create: (context) => AuthCubit(),),
                           Text('Status: ${state.status}'),
                         ],
                       ),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 20.0.h),
 
                     ElevatedButton(
                       onPressed: () {
@@ -103,7 +103,7 @@ BlocProvider(create: (context) => AuthCubit(),),
                       },
                       child: Text('submit'),
                     ),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 20.0.h),
 
                     ElevatedButton(
                       onPressed: () {

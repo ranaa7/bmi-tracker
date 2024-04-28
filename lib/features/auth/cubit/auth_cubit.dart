@@ -22,10 +22,24 @@ class AuthCubit extends Cubit<AuthState> {
 
  static AuthCubit get(context) => BlocProvider.of(context);
 
-  void login(String email, String password) async {
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  final formKey = GlobalKey<FormState>();
+
+  bool isVisible = true;
+  bool isClicked = false;
+
+  void changePasswordVisibility() {
+    isVisible = !isVisible;
+    emit(ChangePasswordVisibilityState());
+  }
+
+  void login() async {
     emit(UserLoginLoading());
     await auth
-        .signInWithEmailAndPassword(email: email, password: password)
+        .signInWithEmailAndPassword(email: emailController.text, password: passwordController.text)
         .then((value) => emit(UserLoginSuccess(uId: value.user!.uid)))
         .catchError((e) => emit(UserLoginError(message: e.toString())));
     //Get.to(ChatScreen());
@@ -42,16 +56,14 @@ class AuthCubit extends Cubit<AuthState> {
 
 
   void signup(
-    String email,
-    String password,
-    String name,
+
   ) async {
     emit(UserRegisterLoading());
     await auth
-        .createUserWithEmailAndPassword(email: email, password: password)
+        .createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text)
         .then((user) {
       emit(UserRegisterSuccess());
-      saveuser(user, name,email , );
+      saveuser(user, usernameController.text,emailController.text , );
 
       // saveUserPref(" ", " ", user.user!.uid!);
     }).catchError((e) {
